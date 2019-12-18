@@ -1,0 +1,15 @@
+{
+  "name": "library-graphql",
+  "version": "1.0.0",
+  "description": "graphql exercises",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Oheneba Poku-Marboah",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server": "^2.9.14",
+    "graphql": "^14.5.8"
+  }
+}
