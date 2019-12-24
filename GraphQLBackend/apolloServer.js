@@ -88,7 +88,7 @@ let books = [
 const typeDefs = gql`
   type Book {
     title: String!
-    published: Int!
+    published: String!
     author: String!
     id: ID!
     genres: [String!]!
@@ -96,7 +96,7 @@ const typeDefs = gql`
   type Author {
     name: String!
     id: ID!
-    born: Int
+    born: String
     bookCount: Int!
   }
   type Query {
@@ -111,13 +111,13 @@ const typeDefs = gql`
     addBook(
       title: String!
       author: String!
-      published: Int!
+      published: String!
       genres: [String!]!
     ): Book
 
     editAuthor(
       name: String!
-      setBornTo: Int!
+      setBornTo: String!
     ): Author
   }
 `
@@ -128,9 +128,14 @@ const resolvers = {
     hello: () => { return "world" },
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allAuthors: () => authors,
+    allAuthors: () => {
+      //console.log(authors);
+      console.log('all authors',new Date().toISOString())
+      return authors
+    },
     allBooks: (root, args) => {
       if(!args.author && !args.genre){
+        console.log('all books')
         return books
       }
 
@@ -139,16 +144,18 @@ const resolvers = {
       
       if(args.author && args.genre){
         let b = books.filter(byGenre)
-        console.log(1)
+        console.log(b.filter(byAuthor))
         return b.filter(byAuthor)
       }
       else if (args.author) {
         console.log("by author")
+        console.log(books.filter(byAuthor))
         return books.filter(byAuthor);
         
       }
       else if(args.genre) {
         console.log("by genre")
+        console.log(books.filter(byGenre))
         return books.filter(byGenre);
       }
             
@@ -180,14 +187,16 @@ const resolvers = {
       };
       const newBook = { ...args, id: uuid() }
       books = books.concat(newBook)
+      console.log(newBook);
       return newBook
     },
     editAuthor: (root, args) => {
       const authorToUpdate = authors.find(a => a.name === args.name);
-
+      
       if(authorToUpdate) {//update
         const updatedAuthor = {...authorToUpdate, born: args.setBornTo}
         authors = authors.map((a) => a !==authorToUpdate ? a: updatedAuthor);
+        console.log('edit author',updatedAuthor)
         return updatedAuthor
       }
       return null
